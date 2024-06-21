@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Карта</title>
+</head>
+<body>
+<div class="wrapper">
+<div class="credit-card" id="card">
+<div class="card-front">
+<div class="branding">
+<img src="/img/vtb.png" class="chip-img" style="width: 100px;" />
+<img src="/img/visa.png" class="visa-logo" />
+</div>
+<div class="card-number">
+<div>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+</div>
+<div>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+</div>
+<div>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+</div>
+<div>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+<span class="card-number-display">_</span>
+</div>
+</div>
+<div class="details">
+<div>
+<span>Кредитная карта</span>
+<span id="card-holder-name">Имя Клиента</span>
+</div>
+<div>
+<span>Срок действия</span>
+<span id="validity">06/28</span>
+</div>
+</div>
+</div>
+<div class="card-back">
+<div class="black-strip"></div>
+<div class="white-strip">
+<span>CVV код</span>
+<div id="cvv-display"></div>
+</div>
+<img src="./foto/mir_logo.png" class="visa-logo"/>
+</div>
+</div>
+<form>
+<label for="card-number">Номер карты</label>
+<input type="number" id="card-number" placeholder="0000 0000 0000 0000" />
+<label for="card-holder">Имя Клиента</label>
+<input type="text" id="card-name-input" placeholder="Ваше Имя" />
+<div class="date-cvv">
+<div>
+<label for="validity">Срок действия карты</label>
+<input type="date" id="validity-input" />
+</div>
+<div>
+<label for="cvv">CVV:</label>
+<input type="number" id="cvv" placeholder="***" />
+</div>
+</div>
+</form>
+
+<h1>Детали для получения карты</h1>
+  <form>
+    <label for="card-holder">Ваше полное имя:</label>
+    <input type="text" id="card-holder-name">
+    <label for="card-number">Гражданство клиента:</label>
+    <input type="text" id="card-number">
+    <label for="validity">Дата рождения клиента:</label>
+    <input type="text" id="validity">
+    <label for="cvv">CVV:</label>
+    <input type="text" id="cvv">
+    <input type="submit" value="Отправить">
+  </form>
+  <br>
+  
+</div>
+
+<script>
+const cardNumber = document.getElementById("card-number");
+const cardHolderName = document.getElementById("card-holder-name");
+const cardNameInput = document.getElementById("card-name-input");
+const displayValidity = document.getElementById("validity");
+const validityInput = document.getElementById("validity-input");
+const cardNumberDisplay = document.querySelectorAll(".card-number-display");
+const cvvInput = document.getElementById("cvv");
+const cvvDisplay = document.getElementById("cvv-display");
+let currentSpanIndex = 0;
+cardNumber.addEventListener("input", () => {
+const inputNumber = cardNumber.value.replace(/\D/g, "");
+cardNumber.value = cardNumber.value.slice(0, 16).replace(/\D/g, "");
+for (let i = 0; i < cardNumberDisplay.length; i++) {
+if (i < inputNumber.length) {
+cardNumberDisplay[i].textContent = inputNumber[i];
+} else {
+cardNumberDisplay[i].textContent = "_";
+}
+}
+
+if (inputNumber.length <= cardNumberDisplay.length) {
+currentSpanIndex = inputNumber.length;
+} else {
+currentSpanIndex = cardNumberDisplay.length;
+}
+});
+
+cardNameInput.addEventListener("input", () => {
+if (cardNameInput.value.length < 1) {
+cardHolderName.innerText = "Your Name Here";
+} else if (cardNameInput.value.length > 30) {
+cardNameInput.value = cardNameInput.value.slice(0, 30);
+} else {
+cardHolderName.innerText = cardNameInput.value;
+}
+});
+
+validityInput.addEventListener("input", () => {
+const inputString = validityInput.value;
+if (inputString.length < 1) {
+displayValidity.innerText = "06/28";
+return false;
+}
+const parts = inputString.split("-");
+const year = parts[0].slice(2);
+const month = parts[1];
+
+
+const
+formattedString = `${month}/${year}`;
+displayValidity.innerText = formattedString;
+});
+
+
+
+cvvInput.addEventListener("input", () => {
+const userInput = cvvInput.value;
+const sanitizedInput = userInput.slice(0, 3);
+const numericInput = sanitizedInput.replace(/\D/g, "");
+cvvInput.value = numericInput;
+cvvDisplay.innerText = numericInput;
+});
+
+
+cvvInput.addEventListener("click", () => {
+document.getElementById("card").style.transform = "rotateY(180deg)";
+});
+
+document.addEventListener("click", () => {
+if (document.activeElement.id != "cvv") {
+document.getElementById("card").style.transform = "rotateY(0deg)";
+}
+});
+
+window.onload = () => {
+cvvInput.value = "";
+validityInput.value = "";
+cardNameInput.value = "";
+cardNumber.value = "";
+};
+
+
+</script>
+<style>
+
+* {
+padding: 0;
+margin: 0;
+box-sizing: border-box;
+font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+body {
+background-color: #9c9fa8;
+}
+.wrapper {
+position: absolute;
+transform: translate(-50%, -50%);
+margin-top: 210px;
+top: 50%;
+left: 50%;
+background-color: #ebfafc;
+width: 700px;
+padding: 3em;
+border-radius: 1em;
+perspective: 800px;
+}
+.credit-card {
+position: relative;
+width: 350px;
+height: 220px;
+margin: auto;
+transform-style: preserve-3d;
+transition: 0.3s;
+}
+.card-front,
+.card-back {
+position: absolute;
+width: inherit;
+height: inherit;
+background: linear-gradient(#374b70, #a2ace9);
+border-radius: 1em;
+backface-visibility: hidden;
+color: rgb(0, 0, 0);
+}
+.card-front {
+padding: 2em 1em;
+}
+.branding {
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.branding img {
+width: 50px;
+height: auto;
+}
+.card-back {
+position: absolute;
+transform: rotateY(180deg);
+}
+.card-number {
+color: #474747;
+font-weight: 600;
+display: flex;
+justify-content: space-between;
+font-size: 0.8em;
+margin-top: 3em;
+}
+.details {
+color: #000000;
+display: flex;
+justify-content: space-between;
+margin-top: 1.5em;
+font-size: 0.8em;
+}
+.details span {
+display: block;
+}
+.details #card-holder-name {
+text-transform: uppercase;
+}
+.card-back .black-strip {
+position: relative;
+background-color: #000000;
+height: 50px;
+top: 2em;
+}
+.card-back .white-strip {
+top: 3em;
+position: relative;
+text-align: right;
+}
+.card-back .white-strip span {
+margin-right: 1em;
+}
+.card-back .white-strip div {
+height: 30px;
+background-color: #deb9b9;
+margin-top: 0.5em;
+}
+.card-back .visa-logo {
+position: absolute;
+width: 50px;
+margin-top: 4em;
+right: 1em;
+}
+form {
+margin-top: 2em;
+}
+label,
+input {
+display: block;
+}
+label {
+margin-bottom: 0.5em;
+font-weight: 600;
+}
+
+label {
+margin-bottom: 0.5em;
+font-weight: 600;
+}
+input {
+width: 100%;
+border: 1px solid #5854a3;
+padding: 1em 0.5em;
+border-radius: 0.5em;
+}
+input:not(:last-child) {
+margin-bottom: 1em;
+}
+form .date-cvv {
+display: flex;
+justify-content: space-between;
+}
+
+</style>
+</body>
+</html>
